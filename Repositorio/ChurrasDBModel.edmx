@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ChurrasModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Churras">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Data" Type="date" Nullable="false" />
+          <Property Name="Motivo" Type="nchar" MaxLength="255" Nullable="false" />
+          <Property Name="Observacao" Type="nchar" MaxLength="2000" />
+          <Property Name="ValorComBebida" Type="money" />
+          <Property Name="ValorSemBebida" Type="money" />
+        </EntityType>
+        <EntityType Name="ControleTemperatura">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdSensor" Type="int" Nullable="false" />
+          <Property Name="Data" Type="datetime" Nullable="false" />
+          <Property Name="Temperatura" Type="float" />
+          <Property Name="Tensao" Type="float" />
+          <Property Name="Dados" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Participante">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdChurras" Type="int" Nullable="false" />
+          <Property Name="Nome" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Valor" Type="money" />
+          <Property Name="Pago" Type="bit" />
+          <Property Name="ComBebida" Type="bit" />
+        </EntityType>
+        <Association Name="FK_Table_ToTable">
+          <End Role="Churras" Type="Self.Churras" Multiplicity="1" />
+          <End Role="Participante" Type="Self.Participante" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Churras">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Participante">
+              <PropertyRef Name="IdChurras" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ChurrasModelStoreContainer">
+          <EntitySet Name="Churras" EntityType="Self.Churras" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ControleTemperatura" EntityType="Self.ControleTemperatura" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Participante" EntityType="Self.Participante" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Table_ToTable" Association="Self.FK_Table_ToTable">
+            <End Role="Churras" EntitySet="Churras" />
+            <End Role="Participante" EntitySet="Participante" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ChurrasModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Churra">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Data" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Motivo" Type="String" MaxLength="255" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Observacao" Type="String" MaxLength="2000" FixedLength="true" Unicode="true" />
+          <Property Name="ValorComBebida" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ValorSemBebida" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="Participantes" Relationship="Self.FK_Table_ToTable" FromRole="Churras" ToRole="Participante" />
+        </EntityType>
+        <EntityType Name="Participante">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdChurras" Type="Int32" Nullable="false" />
+          <Property Name="Nome" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Valor" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Pago" Type="Boolean" />
+          <Property Name="ComBebida" Type="Boolean" />
+          <NavigationProperty Name="Churra" Relationship="Self.FK_Table_ToTable" FromRole="Participante" ToRole="Churras" />
+        </EntityType>
+        <Association Name="FK_Table_ToTable">
+          <End Role="Churras" Type="Self.Churra" Multiplicity="1" />
+          <End Role="Participante" Type="Self.Participante" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Churras">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Participante">
+              <PropertyRef Name="IdChurras" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ChurrasEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Churras" EntityType="Self.Churra" />
+          <EntitySet Name="Participantes" EntityType="Self.Participante" />
+          <AssociationSet Name="FK_Table_ToTable" Association="Self.FK_Table_ToTable">
+            <End Role="Churras" EntitySet="Churras" />
+            <End Role="Participante" EntitySet="Participantes" />
+          </AssociationSet>
+          <EntitySet Name="ControleTemperaturas" EntityType="ChurrasModel.ControleTemperatura" />
+        </EntityContainer>
+        <EntityType Name="ControleTemperatura">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSensor" Type="Int32" Nullable="false" />
+          <Property Name="Data" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Temperatura" Type="Double" />
+          <Property Name="Tensao" Type="Double" />
+          <Property Name="Dados" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ChurrasModelStoreContainer" CdmEntityContainer="ChurrasEntities">
+          <EntitySetMapping Name="Churras">
+            <EntityTypeMapping TypeName="ChurrasModel.Churra">
+              <MappingFragment StoreEntitySet="Churras">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
+                <ScalarProperty Name="Observacao" ColumnName="Observacao" />
+                <ScalarProperty Name="ValorComBebida" ColumnName="ValorComBebida" />
+                <ScalarProperty Name="ValorSemBebida" ColumnName="ValorSemBebida" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Participantes">
+            <EntityTypeMapping TypeName="ChurrasModel.Participante">
+              <MappingFragment StoreEntitySet="Participante">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdChurras" ColumnName="IdChurras" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="Valor" ColumnName="Valor" />
+                <ScalarProperty Name="Pago" ColumnName="Pago" />
+                <ScalarProperty Name="ComBebida" ColumnName="ComBebida" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ControleTemperaturas">
+            <EntityTypeMapping TypeName="ChurrasModel.ControleTemperatura">
+              <MappingFragment StoreEntitySet="ControleTemperatura">
+                <ScalarProperty Name="Dados" ColumnName="Dados" />
+                <ScalarProperty Name="Tensao" ColumnName="Tensao" />
+                <ScalarProperty Name="Temperatura" ColumnName="Temperatura" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="IdSensor" ColumnName="IdSensor" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
