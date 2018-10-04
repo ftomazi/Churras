@@ -2,6 +2,7 @@
 using Repositorio;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -36,11 +37,16 @@ namespace ChurrasTrinca.Controllers
             return View();
         }
 
-        public ActionResult ControlList()
+        public ActionResult ControlList(string filtro)
         {
-            var controls = new List<ControleTemperaturaModel>();
+            DateTime filter;
+            if (string.IsNullOrEmpty(filtro))
+                filter = DateTime.Today;
+            else
+                filter = Convert.ToDateTime(filtro, CultureInfo.GetCultureInfo("pt-BR"));
 
-            var dados = controlDB.ListarTemperaturas();
+            var controls = new List<ControleTemperaturaModel>();
+            var dados = controlDB.ListarTemperaturas(filter);
 
             controls.AddRange(
                 from c in dados

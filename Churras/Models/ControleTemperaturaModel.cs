@@ -14,4 +14,5 @@ namespace ChurrasTrinca.Models
         public double Tensao { get; set; }
         public string Dados { get; set; }
     }
+
 }

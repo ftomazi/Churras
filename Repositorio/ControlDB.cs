@@ -8,17 +8,18 @@ namespace Repositorio
 {
     public class ControlDB
     {
-        private readonly ChurrasEntities _churras;
+        private readonly ChurrasEntities _db;
 
         // permite injeção dos dados p teste unitario
-        public ControlDB(ChurrasEntities churras)
+        public ControlDB(ChurrasEntities dbEntity)
         {
-            _churras = churras;
+            _db = dbEntity;
         }
 
-        public IList<ControleTemperatura> ListarTemperaturas()
+        public IList<ControleTemperatura> ListarTemperaturas(DateTime filtroData)
         {
-            var dados = _churras.ControleTemperaturas.Where(p => p.Data >= DateTime.Today).ToList();
+            var datafim = filtroData.AddDays(1);
+            var dados = _db.ControleTemperaturas.Where(p => p.Data >= filtroData && p.Data < datafim).ToList();
             return dados;
         }
 
